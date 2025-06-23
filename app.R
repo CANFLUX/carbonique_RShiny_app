@@ -25,9 +25,11 @@ if (today() != read_lines("data/updated.txt")) {
 # Tim Elrick, 2024-12-19: added necessary packages
 library(hms)
 library(shiny)
-library(shinydashboard)
+library(shinydashboard) 
 library(shinycssloaders)
 library(plotly)
+library(gridExtra)
+library(grid)
 
 # 3. USER INTERFACE ----
 ui <- dashboardPage(skin = 'black', # Begin UI 
@@ -582,68 +584,77 @@ server <- function(input, output, session) { # Begin server
     }) # End plot render
     
     # g) Cumulative plot
-    output$cumulative <- renderPlotly({ 
+    output$cumulative <- renderPlotly({
       
-      # Create conversion factors
-      conv_factor <- data.frame(12.01/(10^6)*(60*60*24),12.01/(10^9)*(60*60*24),(60*60*24)/(10^6))
-      colnames(conv_factor) <- c("CO2","CH4","Energy")
-      
-      # Create string for conversion factor variable names
-      conv_factor_vars <- c("CO2","CH4","Energy")
-      
-      # Create labels for units
-      conv_factor_units_cum <- data.frame("gC m-2","gC m-2","MJ m-2")
-      colnames(conv_factor_units_cum) <- c("CO2","CH4","Energy")
-      
-      cumulative_names <- input$cumcol # Get name of selected variable
-      
-      # Initialize index variable
-      index <- NULL
-      
-      # Check if NEE or FCH4 is in the matching columns and assign index
-      if (grepl("^NEE", cumulative_names) == TRUE) {
-        index <- 1
-      } else if (grepl("^FCH4", cumulative_names) == TRUE) {
-        index <- 2
+      if (any(grepl("ThirdStage", level))) {
+        
+        # Create conversion factors
+        conv_factor <- data.frame(12.01/(10^6)*(60*60*24),12.01/(10^9)*(60*60*24),(60*60*24)/(10^6))
+        colnames(conv_factor) <- c("CO2","CH4","Energy")
+        
+        # Create string for conversion factor variable names
+        conv_factor_vars <- c("CO2","CH4","Energy")
+        
+        # Create labels for units
+        conv_factor_units_cum <- data.frame("gC m-2","gC m-2","MJ m-2")
+        colnames(conv_factor_units_cum) <- c("CO2","CH4","Energy")
+        
+        cumulative_names <- input$cumcol # Get name of selected variable
+        
+        # Initialize index variable
+        index <- NULL
+        
+        # Check if NEE or FCH4 is in the matching columns and assign index
+        if (grepl("^NEE", cumulative_names) == TRUE) {
+          index <- 1
+        } else if (grepl("^FCH4", cumulative_names) == TRUE) {
+          index <- 2
+        }
+        
+        df <- selectedDataCumulative()
+        colnames(df)[2] <- "var"
+        
+        df$year <- year(data$datetime) 
+        df$DOY <- yday(data$datetime) 
+        
+        cf <- as.numeric(conv_factor[index])
+        units_cf <- conv_factor_units_cum[index]
+        
+        # Determine which years are a full year of data
+        nyrs <- unique(df$year)
+        
+        count_yr <- df %>% 
+          group_by(year) %>%
+          dplyr::summarize(count = sum(!is.na(var)))
+        
+        yrs <- nyrs[count_yr$count >=17520] # Greater or equal to 365 days (i.e. 17520 observations)
+        
+        df2 <- with(df,df[(year >= yrs[1] & year <= yrs[length(yrs)]),])
+        
+        daily.cum <- df2 %>%
+          group_by(year,DOY) %>%
+          dplyr::summarize(var = mean(var)*cf, 
+                           DOY = first(DOY),
+                           year = as.factor(first(year)))
+        
+        flux.cum <- daily.cum %>%
+          group_by(year) %>%
+          dplyr::summarize(var_cum = cumsum(var),
+                           DOY = DOY)%>%
+          ungroup()
+        
+        p <- ggplot() +
+          geom_hline(yintercept = 0, linetype = "dotted", color = "grey10", size = 0.1)+
+          geom_line(data = flux.cum, aes(x = DOY, y = var_cum, color = year))+ 
+          ylab(paste0(cumulative_names," (",units_cf,")",sep = ""))
+        ggplotly(p) 
+        
+      }else{
+        ggplot() +
+          annotate("text", x = 0.5, y = 0.5, label = "No Third Stage Data Available", size = 6, hjust = 0.5, vjust = 0.5) +
+          theme_void() +
+          xlim(0, 1) + ylim(0, 1)
       }
-      
-      df <- selectedDataCumulative()
-      colnames(df)[2] <- "var"
-      
-      df$year <- year(data$datetime) 
-      df$DOY <- yday(data$datetime) 
-      
-      cf <- as.numeric(conv_factor[index])
-      units_cf <- conv_factor_units_cum[index]
-      
-      # Determine which years are a full year of data
-      nyrs <- unique(df$year)
-      
-      count_yr <- df %>% 
-        group_by(year) %>%
-        dplyr::summarize(count = sum(!is.na(var)))
-      
-      yrs <- nyrs[count_yr$count >=17520] # Greater or equal to 365 days (i.e. 17520 observations)
-      
-      df2 <- with(df,df[(year >= yrs[1] & year <= yrs[length(yrs)]),])
-      
-      daily.cum <- df2 %>%
-        group_by(year,DOY) %>%
-        dplyr::summarize(var = mean(var)*cf, 
-                         DOY = first(DOY),
-                         year = as.factor(first(year)))
-      
-      flux.cum <- daily.cum %>%
-        group_by(year) %>%
-        dplyr::summarize(var_cum = cumsum(var),
-                         DOY = DOY)%>%
-        ungroup()
-      
-      p <- ggplot() +
-        geom_hline(yintercept = 0, linetype = "dotted", color = "grey10", size = 0.1)+
-        geom_line(data = flux.cum, aes(x = DOY, y = var_cum, color = year))+ 
-        ylab(paste0(cumulative_names," (",units_cf,")",sep = ""))
-      ggplotly(p) 
     }) # End plot render
     
     # e) All sites plot

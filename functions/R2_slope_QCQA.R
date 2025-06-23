@@ -38,7 +38,7 @@ R2_slope_QCQA <-
       # If there's only one year of data
       df.model.summary <- df %>%
         do({
-          mod = lm(y ~ x, data = .)
+          mod = lm(x ~ y, data = .)
           data.frame(year = df$year[1],
                      Intercept = coef(mod)[1],
                      Slope = coef(mod)[2],
@@ -68,7 +68,7 @@ R2_slope_QCQA <-
       df.model.summary <- df %>%
         group_by(year) %>%
         do({
-          mod = lm(y ~ x, data = .)
+          mod = lm(x ~ y, data = .)
           data.frame(Intercept = coef(mod)[1],
                      Slope = coef(mod)[2],
                      R2 = summary(mod)$adj.r.squared)

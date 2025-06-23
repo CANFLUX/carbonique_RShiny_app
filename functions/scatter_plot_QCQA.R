@@ -37,7 +37,7 @@ scatter_plot_QCQA <-
     nyears <- unique(df$year)
     
     if (length(nyears) == 1) {
-      lm.simple <- lm(y ~ x , data = df) #Fit linear model
+      lm.simple <- lm(x ~ y , data = df) #Fit linear model
       best_model <- lm.simple
       
       # Get R2 and slope for linear model
@@ -62,10 +62,9 @@ scatter_plot_QCQA <-
         ))
       
     } else {
-      lm.simple <- lm(y ~ x, data = df) #Fit linear model with all data
-      #lm.withyear <- lm(y ~ x + year, data = df) #Fit linear model with year
+      lm.simple <- lm(x ~ y, data = df) #Fit linear model with all data
       lm.interaction <-
-        lm(y ~ x * year, data = df) #Fit linear model with year as interaction
+        lm(x ~ y * year, data = df) #Fit linear model with year as interaction
       
       # Find best linear model based on AIC
       aic_values <- AIC(lm.simple, lm.interaction)
@@ -88,7 +87,7 @@ scatter_plot_QCQA <-
         df.model.summary <- df %>%
           group_by(year) %>%
           do({
-            mod = lm(y ~ x, data = .)
+            mod = lm(x ~ y, data = .)
             data.frame(Intercept = coef(mod)[1],
                        Slope = coef(mod)[2])
           })
@@ -104,23 +103,20 @@ scatter_plot_QCQA <-
       if (select_best_model == 2) {
         df.model.summary$year <- as.numeric(df.model.summary$year)
         
+        # Round last two columns
+        df.model.summary[, (ncol(df.model.summary)-1):ncol(df.model.summary)] <-
+          signif(df.model.summary[, (ncol(df.model.summary)-1):ncol(df.model.summary)], 1)
+        
+        # Create table graphic
+        tbl <- tableGrob(df.model.summary)
+        
         p <-
           p + geom_smooth(aes(x, y, color = as.factor(year)), method = lm) +
           ggtitle(paste(
             "R2 = ",
             as.character(round(r2, 2)),
-            ", year is a significant interaction term"
-          )) +
-          annotate(
-            geom = "table",
-            x = floor(max(df$x)),
-            y = ceiling(max(df$y)),
-            label = list(round(setDT(
-              df.model.summary
-            ), 2)),
-            vjust = 1,
-            hjust = 0
-          )
+            ", year is a significant interaction term")) + 
+          annotation_custom(tbl, xmin = floor(max(df$x)), xmax = floor(max(df$x)), ymin = ceiling(max(df$y)), ymax = ceiling(max(df$y)))
         
       } else {
         p <- p + geom_smooth(aes(x, y), method = lm, color = 'black') +
@@ -144,7 +140,7 @@ scatter_plot_QCQA <-
     
     if (vis_potential_outliers == 1) {
       
-      model <- lm(y ~ x, data = df)
+      model <- lm(x ~ y, data = df)
       
       # Calculate Cook's Distance
       df$cooksd <- cooks.distance(model)

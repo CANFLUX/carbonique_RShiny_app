@@ -41,8 +41,8 @@ create_EBC_columns <- function(data) {
   colnames(data)[which(colnames(data) == "AE")] <- new_AE_name
   
   # Create data for turbulent fluxes (H_LE)
-  H_index <- grep("^H_.*_uStar_orig$", colnames(data))
-  LE_index <- grep("^LE_.*_uStar_orig$", colnames(data))
+  H_index <- grep("^H(_.*_uStar_orig)?$", colnames(data))
+  LE_index <- grep("^LE(_.*_uStar_orig)?$", colnames(data))
   
   # Combine selected indices
   indices_H_LE <- c(H_index, LE_index)

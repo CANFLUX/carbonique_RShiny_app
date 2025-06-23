@@ -18,7 +18,9 @@ yrs_included <-
       inpath <-
         paste(basepath,
               "/",
-              as.character(yrs[i]),
+              # TE 2025-06-19, fixed
+              #as.character(yrs[i]),
+              yrs[i], # TE, new
               "/",
               site,
               "/",

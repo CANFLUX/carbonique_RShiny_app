@@ -11,6 +11,7 @@ library(ggrepel)
 
 # get initial paths from UQAM_ini.R
 source("scripts/UQAM_ini.R")
+#source("/Users/saraknox/Code/RShinyServer/carbonique_RShiny_app/scripts/UQAM_ini.R")
 
 # List all directories and subdirectories
 dir_list <- list.dirs(main_dir,

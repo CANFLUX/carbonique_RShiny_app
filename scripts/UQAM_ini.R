@@ -4,13 +4,14 @@
 #main_dir <- "/Users/saraknox/Code/local_data_cleaning/Projects/uqam-site/Database"
 # TE, 2024-12-11
 main_dir <- '/home/uqam-site'
-
+#main_dir <- '/Users/saraknox/Code/local_data_cleaning/Projects/uqam-site/Database'
+  
 # Path for met/flux variables to display
 basepath <- main_dir
 
 # Tim Elrick, 2024-12-18: changed according to Sara
-level <- c("Clean/SecondStage", "Met")
-#level <- c("Clean/ThirdStage","Met") #Update to third stage
+#level <- c("Clean/SecondStage", "Met")
+#level <- c("Clean/ThirdStage","Met") #NEED TO UPDATE FOR THIRD STAGE WHEN ALL SITES HAVE DATA
 
 tv_input <- "clean_tv" # MAKE SURE tv is in folder
 
@@ -20,7 +21,6 @@ tv_input <- "clean_tv" # MAKE SURE tv is in folder
 UnitCSVFilePath <- 'data/flux_variables.csv'
 
 # path to shiny app
-#arg <- '/Users/saraknox/Code/flux_shiny_plots/'
 # TE, 2024-12-11
 arg <- "./"
 
