@@ -40,7 +40,7 @@ read_data_all_years <-
       
       #setwd()
       #Convert Matlab timevector to POSIXct
-      tv <- readBin(paste0(inpath,"/",tv_input,sep=""), double(), n = 18000)
+      tv <- readBin(file.path(inpath, tv_input), double(), n = 18000)
       datetime <-
         as.POSIXct((tv - 719529) * 86400, origin = "1970-01-01", tz = "UTC")
       
@@ -92,7 +92,7 @@ read_data_all_years <-
               if (grepl("badWD", variables[k])) next #Revisit!
               
               data <-
-                data.frame(readBin(paste0(inpath,"/",variables[k],sep=""), numeric(), n = 18000, size = 4))
+                data.frame(readBin(file.path(inpath, variables[k]), numeric(), n = 18000, size = 4))
               colnames(data) <- variables[k]
               frame <- cbind(frame, data)
             }
