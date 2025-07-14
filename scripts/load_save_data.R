@@ -30,7 +30,7 @@ dir_sites <- dir_sites[grepl("_[1-9][0-9]?$", dir_sites)]
 sites <- unique(sapply(strsplit(dir_sites, "/"), '[[', length(strsplit(dir_sites, "/")[[1]]))) 
 
 # Tim Elrick, 2024:12-17: load all functions, fixed
-fx_path <- paste0(arg,'functions',sep ="")
+fx_path <- file.path(arg, "functions")
 fxs <- list.files(fx_path, pattern = "\\.R$", full.names = T)
 for (f in fxs) source(f)
 
@@ -110,7 +110,7 @@ yvars <- var_of_interest[-length(var_of_interest)]
 sites_coordinates <- read_excel(coordinatesXLSXFilePath,sheet=1,col_names= TRUE)
 
 # save data to app folder
-save(list = ls(), file = paste0(arg,'data/all_data.RData',sep =""))
+save(list = ls(), file = file.path(arg, "data", "all_data.RData"))
 
 # Tim Elrick, 2024-12-19: save date to only run this once a day
-write(as.character(today()), file = paste0(arg, 'data/updated.txt'))
+write(as.character(today()), file = file.path(arg, "data", "updated.txt"))

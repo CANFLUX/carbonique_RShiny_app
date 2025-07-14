@@ -3,15 +3,15 @@
 # Specify the path to your database
 #main_dir <- "/Users/saraknox/Code/local_data_cleaning/Projects/uqam-site/Database"
 # TE, 2024-12-11
-#main_dir <- '/home/uqam-site'
-main_dir <- '/Users/saraknox/Code/local_data_cleaning/Projects/uqam-site/Database'
+main_dir <- '/home/uqam-site'
+#main_dir <- '/Users/saraknox/Code/local_data_cleaning/Projects/uqam-site/Database'
   
 # Path for met/flux variables to display
 basepath <- main_dir
 
 # Tim Elrick, 2024-12-18: changed according to Sara
-#level <- c("Clean/SecondStage", "Met")
-level <- c("Clean/ThirdStage","Met") #NEED TO UPDATE FOR THIRD STAGE WHEN ALL SITES HAVE DATA
+level <- c("Clean/SecondStage", "Met")
+#level <- c("Clean/ThirdStage","Met") #NEED TO UPDATE FOR THIRD STAGE WHEN ALL SITES HAVE DATA
 
 tv_input <- "clean_tv" # MAKE SURE tv is in folder
 

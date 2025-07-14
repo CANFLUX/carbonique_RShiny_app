@@ -28,15 +28,7 @@ read_data_all_years <-
     # Loop through years
     for (i in 1:length(yrs)) {
       
-      inpath <-
-        paste(basepath,
-              "/",
-              as.character(yrs[i]),
-              "/",
-              site,
-              "/",
-              level[1],
-              sep = "")
+      inpath <- file.path(basepath, as.character(yrs[i]), site, level[1])
       
       #setwd()
       #Convert Matlab timevector to POSIXct
@@ -52,15 +44,7 @@ read_data_all_years <-
       
       # Loop through levels
       for (j in 1:length(level)) {
-        inpath <-
-          paste(basepath,
-                "/",
-                as.character(yrs[i]),
-                "/",
-                site,
-                "/",
-                level[j],
-                sep = "")
+        inpath <- file.path(basepath, as.character(yrs[i]), site, level[j])
         
         #Extract data of interest
         ##Use a loop function to read selected binary files and bind to the empty dataframe
@@ -68,8 +52,8 @@ read_data_all_years <-
         # if variables not defined
         if( !is.null("variables") )
         {
-          all_files_folders <- list.files(paste0(inpath,"/"), recursive = FALSE, full.names = FALSE)
-          variables <- all_files_folders[!file.info(file.path(paste0(inpath,"/"), all_files_folders))$isdir] # Get file information and filter out directories
+          all_files_folders <- list.files(file.path(inpath), recursive = FALSE, full.names = FALSE)
+          variables <- all_files_folders[!file.info(file.path(inpath, all_files_folders))$isdir] # Get file information and filter out directories
         }
         
         if (length(variables) != 0) { # Remove?
@@ -122,7 +106,7 @@ read_data_all_years <-
     }
     
     if (export == 1) {
-      write.csv(df, paste(outpath, outfilename, ".csv", sep = ""))
+      write.csv(df, file.path(outpath, paste0(outfilename, ".csv")))
     }
     return(dfmultiyear)
   }
