@@ -63,7 +63,7 @@ for (i in 1:length(sites)) {
   # Open data at site
   site <- sites[i]
   
-  yrs <- yrs_included(basepath,site,level)
+  yrs <- yrs_included(basepath,site,level[1])
   
   # Load data
   data_in <- read_data_all_years(basepath,yrs,site,level,tv_input)

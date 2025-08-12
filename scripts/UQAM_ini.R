@@ -1,7 +1,6 @@
 # variables/paths to edit to run 'flux_shiny_app.R'
 
 # Specify the path to your database
-#main_dir <- "/Users/saraknox/Code/local_data_cleaning/Projects/uqam-site/Database"
 # TE, 2024-12-11
 main_dir <- '/home/uqam-site'
 #main_dir <- '/Users/saraknox/Code/local_data_cleaning/Projects/uqam-site/Database'

@@ -13,7 +13,7 @@
 # Tim Elrick, 2024-12-19: speed up load time
 #source("scripts/load_save_data.R")
 library(tidyverse)
-if (today() != read_lines("data/updated.txt")) {
+if (!file.exists("data/updated.txt") || today() != read_lines("data/updated.txt")) {
   source("scripts/load_save_data.R")
 } else {
   load("data/all_data.RData")
@@ -287,7 +287,7 @@ server <- function(input, output, session) { # Begin server
   observeEvent(input$sites, { # Change output based on site selection
     
     # Update data 
-    yrs <- yrs_included(basepath,input$sites,level)
+    yrs <- yrs_included(basepath,site,level[1])
     data <- read_data_all_years(basepath,yrs,input$sites,level,tv_input)
     # add EBC columns
     data <- create_EBC_columns(data)
