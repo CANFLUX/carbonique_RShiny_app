@@ -30,6 +30,11 @@ library(shinycssloaders)
 library(plotly)
 library(gridExtra)
 library(grid)
+library(tidyverse)
+library(readxl)
+library(data.table)
+library(ggrepel)
+library(readr)
 
 # 3. USER INTERFACE ----
 ui <- dashboardPage(skin = 'black', # Begin UI 

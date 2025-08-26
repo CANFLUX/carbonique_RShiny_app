@@ -21,7 +21,7 @@ var_units <- function(Variables, UnitCSVFilePath) {
   units <- data.frame(name = Variables,
                       variable = shortnames)
   
-  flux_var <- read.csv(UnitCSVFilePath)
+  flux_var <- readr::read_csv(UnitCSVFilePath,show_col_types = FALSE)
   flux_var <- flux_var[, c('Variable',
                            'Units',
                            'Type')]
