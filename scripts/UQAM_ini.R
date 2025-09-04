@@ -9,7 +9,8 @@ main_dir <- '/home/uqam-site'
 basepath <- main_dir
 
 # Tim Elrick, 2024-12-18: changed according to Sara
-level <- c("Clean/SecondStage", "Met")
+#level <- c("Clean/SecondStage", "Met")
+level <- c("Met")
 #level <- c("Clean/ThirdStage","Met") #NEED TO UPDATE FOR THIRD STAGE WHEN ALL SITES HAVE DATA
 
 tv_input <- "clean_tv" # MAKE SURE tv is in folder
