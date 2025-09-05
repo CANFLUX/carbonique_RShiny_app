@@ -13,28 +13,6 @@ library(ggrepel)
 source("scripts/UQAM_ini.R")
 #source("/Users/saraknox/Code/RShinyServer/carbonique_RShiny_app/scripts/UQAM_ini.R")
 
-# List all directories and subdirectories
-dir_list <- list.dirs(main_dir,
-                      full.names = TRUE,  
-                      recursive = TRUE)
-
-# From that list, get site names
-dir_length <- lengths(strsplit(dir_list, "/"))
-
-# Tim Elrick, 2024-12-17: Fixed issue that it picked up also non-year numbers
-dir_years <- dir_list[grepl("/20\\d{2}$", dir_list)]
-
-# Tim Elrick, 2024-12-17: Select only UQAM sites greater than UQAM_0
-dir_sites <- list.dirs(dir_years, full.names = TRUE, recursive = FALSE)
-dir_sites <- dir_sites[grepl("_[1-9][0-9]?$", dir_sites)]
-sites <- unique(sapply(strsplit(dir_sites, "/"), '[[', length(strsplit(dir_sites, "/")[[1]]))) 
-
-# Tim Elrick, 2024:12-17: load all functions, fixed
-fx_path <- file.path(arg, "functions")
-fxs <- list.files(fx_path, pattern = "\\.R$", full.names = T)
-for (f in fxs) source(f)
-
-
 # 2. LOAD DATA ---------------------------------------------------------------------------------- 
 
 # Load site data from first site when app initializes 

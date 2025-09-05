@@ -17,6 +17,7 @@ if (!file.exists("data/updated.txt") || today() != read_lines("data/updated.txt"
   source("scripts/load_save_data.R")
 } else {
   load("data/all_data.RData")
+  source("scripts/UQAM_ini.R")
 }
 
 
@@ -169,7 +170,7 @@ ui <- dashboardPage(skin = 'black', # Begin UI
                                                                   color = getOption("spinner.color", default = "dodgerblue")),
                                      
                                      shinycssloaders::withSpinner(plotlyOutput('radiation2', # For cross correlation plot
-                                                                               width = '100%', height = '60%'),
+                                                                               width = '100%', height = '100%'),
                                                                   type = getOption("spinner.type", default = 5),
                                                                   color = getOption("spinner.color", default = "dodgerblue")),
                                      
@@ -292,7 +293,7 @@ server <- function(input, output, session) { # Begin server
   observeEvent(input$sites, { # Change output based on site selection
     
     # Update data 
-    yrs <- yrs_included(basepath,site,level[1])
+    yrs <- yrs_included(basepath,input$sites,level[1])
     data <- read_data_all_years(basepath,yrs,input$sites,level,tv_input)
     # add EBC columns
     data <- create_EBC_columns(data)
@@ -392,8 +393,8 @@ server <- function(input, output, session) { # Begin server
                                    b = 30,  # Bottom margin
                                    l = 30)) + # Left margin +
         ylab(ylabel) +
-        xlab('Date')  + # relabl X axis
-        xlim(input$range[1], input$range[2]) # change date limits to user input 
+        xlab('Date')  #+ # relabl X axis
+        #xlim(input$range[1], input$range[2]) # change date limits to user input 
       
       # Remove legend if there aren't multiple variables
       if (length(selectedData())<=2){
